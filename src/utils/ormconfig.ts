@@ -13,14 +13,16 @@ import {
 
 const config: ConnectionOptions = {
   type: "postgres",
-  host: HOST,
+  host: String(HOST),
   port: Number(PORT),
-  username: USERNAME,
-  password: PASSWORD,
-  database: DATABASE,
-  logging: true,
-  entities: [ENTITIES || ''],
-  migrations: [MIGRATIONS || ''],
+  username: String(USERNAME),
+  password: String(PASSWORD),
+  database: String(DATABASE),
+  logging: false,
+  synchronize: true,
+  migrationsRun: false,
+  entities: [ENTITIES || ""],
+  migrations: [MIGRATIONS || ""],
   cli: {
     migrationsDir: path.join(__dirname, "./" + MIGRATIONS_DIR),
   },

@@ -36,6 +36,9 @@ Check out a list script below
 
 `npm install` or `yarn`
 
+#### Start hot reload
+
+`npm run local` or `yarn local`
 #### Start development
 
 `npm run dev` or `yarn dev`

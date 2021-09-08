@@ -1,0 +1,7 @@
+package-lock.json
+node_modules
+.awcache
+.next
+dist
+svgs
+.eslintrc.js
