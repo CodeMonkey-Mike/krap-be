@@ -20,10 +20,10 @@ export default class User extends BaseEntity {
   username!: string;
 
   @Field()
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email!: string;
 
-  @Column()
+  @Column({ select: false, length: 255, nullable: true })
   password!: string;
 
   @Field(() => String)
@@ -32,5 +32,5 @@ export default class User extends BaseEntity {
 
   @Field(() => String)
   @UpdateDateColumn()
-  updated_at: Date; 
+  updated_at: Date;
 }
