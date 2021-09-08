@@ -8,33 +8,20 @@ import {
   ObjectType,
   FieldResolver,
 } from 'type-graphql';
-import User from '../../db/entities/user.entity';
-import UsernamePasswordInput from './UsernamePasswordInput';
 import { getConnection } from 'typeorm';
-import { Context } from 'koa';
+import User from '../../db/entities/user.entity'; 
 import bcrypt from 'bcrypt';
-import { Session } from 'koa-session';
 import { validateRegister } from './validateRegister'; 
+import { ContextType, FieldError } from '../utils/type';
+import UserType, { LoginType } from './type';
+import { UserInputError } from 'apollo-server-koa';
 
 const saltRounds = 10;
 
-export type UserContext = {
-  ctx: Context;
-  session: Session;
-};
-
-@ObjectType()
-export class FieldError {
-  @Field()
-  field!: string;
-  @Field()
-  message!: string;
-}
-
 @ObjectType()
 class UserResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
+  @Field(() => FieldError, { nullable: true })
+  errors?: FieldError;
 
   @Field(() => User, { nullable: true })
   user?: User;
@@ -45,7 +32,7 @@ export class UserResolver {
   @FieldResolver(() => String)
   // query profile
   @Query(() => User, { nullable: true })
-  me(@Ctx() { session }: UserContext) {
+  me(@Ctx() { session }: ContextType) {
     // you are not logged in
     if (!session.userId) {
       return null;
@@ -56,14 +43,14 @@ export class UserResolver {
   // account register
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { session }: UserContext
+    @Arg("options") options: UserType,
+    @Ctx() { session }: ContextType
   ): Promise<UserResponse> {
     let user;
     // validate user information are corect
     const errors = validateRegister(options);
     if (errors) {
-      return { errors };
+      throw new UserInputError(errors.message, { field: errors .field});
     }
     // check user existed
     const count = await User.count({
@@ -72,14 +59,9 @@ export class UserResolver {
       },
     });
     if (count > 0) {
-      return {
-        errors: [
-          {
-            field: 'email',
-            message: 'The account already existed',
-          },
-        ],
-      };
+      throw new UserInputError("The account already existed", {
+        field: "email",
+      });
     } else {
       try {
         const salt = bcrypt.genSaltSync(saltRounds);
@@ -93,7 +75,7 @@ export class UserResolver {
             email: options.email,
             password: hashedPassword,
           })
-          .returning('*')
+          .returning("*")
           .execute();
         user = result.raw[0];
       } catch (err) {
@@ -102,42 +84,33 @@ export class UserResolver {
     }
 
     session.userId = user.id;
+    user.password = "";
 
     return { user };
   }
   // acount login
   @Mutation(() => UserResponse)
   async login(
-    @Arg("usernameOrEmail") usernameOrEmail: string,
-    @Arg("password") password: string,    @Ctx() { session }: UserContext
+    @Arg("options") options: LoginType,
+    @Ctx() { session }: ContextType
   ): Promise<UserResponse> {
-    const user = await User.findOne(
-      usernameOrEmail.includes("@")
-        ? { where: { email: usernameOrEmail } }
-        : { where: { username: usernameOrEmail } }
-    );
-    if (!user) { 
-      return {
-        errors: [
-          {
-            field: "usernameOrEmail",
-            message: "Username doesn't exist",
-          },
-        ],
-      };
+    const where =
+      options.usernameOrEmail.includes("@")
+        ? { email: options.usernameOrEmail }
+        : { username: options.usernameOrEmail };
+    let user = await User.findOne({ where, select: ["id", "password","username","email"] });
+    if (!user) {
+      throw new UserInputError("Username doesn't exist", {
+        field: "usernameOrEmail",
+      });
     }
 
-    const valid = bcrypt.compareSync(password, user.password);
-    if (!valid) { 
-      return {
-        errors: [
-          {
-            field: "password",
-            message: "Incorrect password",
-          },
-        ],
-      };
-    } 
+    const valid = bcrypt.compareSync(options.password, user.password);
+    if (!valid) {
+      throw new UserInputError("Incorrect password", {
+        field: "password",
+      });
+    }
     session.userId = user.id;
 
     return {
