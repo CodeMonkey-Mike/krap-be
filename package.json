@@ -1,6 +1,6 @@
 {
   "name": "krap-be",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A backend boilerplate get started a new project.",
   "engines": {
     "node": ">=12.x"

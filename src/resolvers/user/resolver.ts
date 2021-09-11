@@ -94,11 +94,11 @@ export class UserResolver {
     @Arg("options") options: LoginType,
     @Ctx() { session }: ContextType
   ): Promise<UserResponse> {
-    const user = await User.findOne(
+    const where =
       options.usernameOrEmail.includes("@")
-        ? { where: { email: options.usernameOrEmail } }
-        : { where: { username: options.usernameOrEmail } }
-    );
+        ? { email: options.usernameOrEmail }
+        : { username: options.usernameOrEmail };
+    let user = await User.findOne({ where, select: ["id", "password","username","email"] });
     if (!user) {
       throw new UserInputError("Username doesn't exist", {
         field: "usernameOrEmail",
