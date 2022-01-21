@@ -20,13 +20,17 @@ Create `.env` and copy `.env.example`, change with the postgres configuration.
 
 #### Clone this repo using
 
-`git clone --depth=1 <GIT_URL> <YOUR_PROJECT_NAME> && cd <YOUR_PROJECT_NAME> && rm -rf .git`
+```
+$ git clone --depth=1 <GIT_URL> <YOUR_PROJECT_NAME> && cd <YOUR_PROJECT_NAME> && rm -rf .git
+```
 
 After cloning this repository, you can add your own git repository use it as the original.
 
 #### Move to the appropriate directory:
 
-`cd <YOUR_PROJECT_NAME>`
+```
+$ cd <YOUR_PROJECT_NAME>
+```
 
 Check out a list script below
 
@@ -34,19 +38,46 @@ Check out a list script below
 
 #### Install node modules
 
-`npm install` or `yarn`
+```
+$ npm install or yarn
+```
+
+#### Create default database
+
+KRAP-BE provided set up script for ease create postgresDB locally by command:
+
+```
+$ yarn localdb
+```
 
 #### Start hot reload
 
-`npm run local` or `yarn local`
+```
+$ npm run local or yarn local
+```
+
 #### Start development
 
-`npm run dev` or `yarn dev`
+```
+$ npm run dev or yarn dev
+```
 
 #### Test
 
-`npm run test` or `yarn test`
+```
+$ npm run test or yarn test
+```
+
+#### Migration
+
+Easy to create migration file by command:
+
+```
+$ yarn mg <FILE_NAME>
+```
 
 #### Production build
 
-`npm run build` or `yarn build`
+```
+$ npm run build or yarn build
+```

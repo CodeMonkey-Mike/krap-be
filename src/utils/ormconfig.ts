@@ -19,7 +19,7 @@ const config: ConnectionOptions = {
   password: String(PASSWORD),
   database: String(DATABASE),
   logging: false,
-  synchronize: true,
+  synchronize: false,
   migrationsRun: false,
   entities: [ENTITIES || ""],
   migrations: [MIGRATIONS || ""],
