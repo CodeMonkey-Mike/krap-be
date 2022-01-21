@@ -10,7 +10,7 @@
     "dev": "NODE_ENV=development ts-node src/server.ts",
     "build": "NODE_ENV=production tsc --project .",
     "start": "ts-node dist/server.js",
-    "migration:generate": "typeorm migration:create -n UserMigration",
+    "mg": "typeorm migration:create -n",
     "format": "prettier --list-different 'src/**/*.{js,jsx,ts,tsx,json,htm,html}'",
     "format:fix": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,htm,html}'",
     "lint": "eslint src/ --ext .ts,.tsx,.js,.jsx",
