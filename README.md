@@ -81,3 +81,14 @@ $ yarn mg <FILE_NAME>
 ```
 $ npm run build or yarn build
 ```
+
+## How can use the boilerplate
+
+This is boilerplate and it doesn't require one-way development.
+All folder structure is just an example to follow, you could create which folder you see it make sense to you.
+
+## Contributing
+
+All contributions to this boilerplate are welcome.
+
+Checkout contribute guide [here](CONTRIBUTING.md).
