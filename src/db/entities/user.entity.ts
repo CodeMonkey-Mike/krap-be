@@ -23,8 +23,14 @@ export default class User extends BaseEntity {
   @Column({ unique: true, nullable: true })
   email!: string;
 
-  @Column({ select: false, length: 255, nullable: true })
+  @Column({ length: 255, nullable: true })
   password!: string;
+
+  @Column({nullable: true})
+  refresh_token: string;
+
+  @Column({nullable: true})
+  refresh_expires: Date;
 
   @Field(() => String)
   @CreateDateColumn()

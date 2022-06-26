@@ -23,3 +23,7 @@ export const MIGRATIONS_DIR =
   process.env.NODE_ENV === "development"
     ? "src/db/migrations/"
     : process.env.TYPEORM_MIGRATIONS_DIR;
+
+export const PROTECTED_OP = [
+  "getUser",
+];
