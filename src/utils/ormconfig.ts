@@ -13,12 +13,12 @@ import {
 
 const config: ConnectionOptions = {
   type: "postgres",
-  host: String(HOST),
+  host: HOST,
   port: Number(PORT),
-  username: String(USERNAME),
-  password: String(PASSWORD),
-  database: String(DATABASE),
-  logging: false,
+  username: USERNAME,
+  password: PASSWORD,
+  database: DATABASE,
+  logging: true,
   synchronize: false,
   migrationsRun: false,
   entities: [ENTITIES || ""],

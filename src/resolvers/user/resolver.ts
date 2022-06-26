@@ -146,7 +146,7 @@ export class UserResolver {
               email: options.email,
               password: hashedPassword,
             })
-            .returning("*")
+            .returning(["id", "username", "email"])
             .execute();
           user = result.raw[0];
 
@@ -162,7 +162,7 @@ export class UserResolver {
               email: user.email,
             },
             JWT_SECRET,
-            { expiresIn: 300 }
+            { expiresIn: 1000 * 60 * 60 * 24 }
           );
 
           ctx.cookies.set("refreshToken", refreshToken, {
@@ -218,7 +218,7 @@ export class UserResolver {
       };
     }
 
-    const valid = bcrypt.compareSync(password, user.password);
+    const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return {
         errors: [
@@ -245,7 +245,7 @@ export class UserResolver {
         email: user.email,
       },
       JWT_SECRET,
-      { expiresIn: 300 }
+      { expiresIn: 1000 * 60 * 60 * 24 }
     );
 
     ctx.cookies.set("refreshToken", refreshToken, {
@@ -256,7 +256,7 @@ export class UserResolver {
       sameSite: "lax",
       signed: true,
       secure: isProd,
-      domain: process.env.DOMAIN || "mikeneder.me",
+      domain: process.env.DOMAIN || "",
     });
 
     await User.update(

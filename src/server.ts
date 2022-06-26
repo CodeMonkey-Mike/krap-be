@@ -1,5 +1,9 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
+import processEnv from "./env";
+dotenv.config();
+processEnv();
+
 import Koa, { Context } from "koa";
 import jwtDecode from "jwt-decode";
 import bodyParser from "koa-bodyparser";
@@ -11,11 +15,12 @@ import { UserResolver } from "./resolvers/user/resolver";
 import { authMiddleware } from "./middlewares/auth";
 import config from "./utils/ormconfig";
 
-dotenv.config();
 
 const app = new Koa();
 const path = "/graphql";
 const PORT = process.env.HTTP_PORT || 4000;
+app.keys = [process.env.SESSION_SECRET || "jwt_secret"];
+app.proxy = true;
 const isProd = process.env.NODE_ENV === "production" ? true : false;
 const JWT_SECRET = process.env.SESSION_SECRET || "jwt_secret";
 const main = async () => { 

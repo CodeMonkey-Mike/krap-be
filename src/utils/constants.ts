@@ -25,5 +25,5 @@ export const MIGRATIONS_DIR =
     : process.env.TYPEORM_MIGRATIONS_DIR;
 
 export const PROTECTED_OP = [
-  "login",
+  "getUser",
 ];
